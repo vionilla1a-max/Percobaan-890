@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FokusMasaDepan</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            primary: { DEFAULT: '#059669', light: '#047857', dark: '#065f46' },
+            secondary: '#f59e0b', /* amber */
+            danger: '#ef4444',
+            success: '#22c55e',
+            warning: '#f97316'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gray-100">
+
+  <div id="app-container" class="max-w-md mx-auto min-h-screen bg-gray-100 relative">
+    <!-- PAGE: DASHBOARD -->
+    <div id="page-dashboard" class="page active pb-28">
+      <!-- Header -->
+      <header class="p-6 rounded-b-3xl shadow-lg text-white"
+              style="background: linear-gradient(90deg,#059669 0%, #047857 60%, #065f46 100%); height: 190px;">
+        <div class="flex justify-between items-start">
+          <h1 class="text-2xl font-extrabold">FokusMasaDepan</h1>
+          <button aria-label="Pengaturan" onclick="navigateTo('page-settings')"
+                  class="p-2 rounded-full bg-white/10 hover:bg-white/25 transition">
+            <!-- gear -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10.325 4.317c.43-1.6 2.923-1.6 3.354 0l.43 1.6c.29.078.574.168.845.27l1.524-.43c1.55-.44 3.03.8 2.58 2.348l-.43 1.524c.102.27.192.556.27.845l1.6.43c1.6.43 1.6 2.924 0 3.354l-1.6.43c-.078.29-.168.574-.27.845l.43 1.524c.44 1.55-.8 3.03-2.348 2.58l-1.524-.43c-.27.102-.556.192-.845.27l-.43 1.6c-.43 1.6-2.924 1.6-3.354 0l-.43-1.6c-.29-.078-.574-.168-.845-.27l-1.524.43c-1.55.44-3.03-.8-2.58-2.348l.43-1.524c-.102-.27-.192-.556-.27-.845l-1.6-.43c-1.6-.43-1.6-2.924 0-3.354l1.6-.43c.078-.29.168-.574.27-.845l-.43-1.524c-.44-1.55.8-3.03 2.348-2.58l1.524.43c.27-.102.556-.192.845-.27l.43-1.6zM12 15a3 3 0 100-6 3 3 0 000 6z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="mt-6">
+          <p class="text-sm opacity-90">Saldo Saat Ini:</p>
+          <p id="dash-saldo" class="text-4xl font-extrabold tracking-tight mt-1">Rp 0</p>
+        </div>
+      </header>
+
+      <!-- Main -->
+      <main class="p-4 space-y-5 -mt-6">
+        <!-- Dream Card -->
+        <div class="bg-white rounded-xl shadow-md p-5">
+          <div class="flex justify-between items-center mb-2">
+            <h3 id="dash-dream-title" class="font-bold text-gray-800">Atur Impian Anda!</h3>
+            <button class="text-sm text-primary font-medium" onclick="showModal('modal-edit-dream')">Ubah Impian</button>
+          </div>
+          <p class="text-xs text-gray-500 mb-2">Target: <span id="dash-dream-target-amount">Rp 0</span> s/d
+            <span id="dash-dream-target-date">-</span></p>
+
+          <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+            <div id="dash-dream-progress" class="h-2.5 rounded-full transition-all" style="width:0%; background: linear-gradient(90deg,#f59e0b,#f97316);"></div>
+          </div>
+          <p class="text-xs text-gray-500 mt-1 text-right"><span id="dash-dream-progress-percent">0%</span> tercapai</p>
+        </div>
+
+        <!-- Budget Card -->
+        <div class="bg-white rounded-xl shadow-md p-5">
+          <h3 class="font-bold text-gray-800 mb-1">Budget Bulanan</h3>
+          <p id="dash-budget-sisa" class="text-2xl font-bold text-gray-900">Rp 0</p>
+          <p class="text-sm text-gray-500 mb-3">Sisa dari <span id="dash-budget-limit">Rp 0</span></p>
+          <div class="flex items-center space-x-3">
+            <p class="text-sm font-medium">Indikator:</p>
+            <span id="dash-budget-indicator" class="px-3 py-1 rounded-full text-sm font-semibold text-white bg-gray-400">...</span>
+            <p id="dash-budget-warning" class="text-sm text-gray-600 flex-1"></p>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 gap-4">
+          <button onclick="navigateTo('page-history')"
+                  class="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transform hover:-translate-y-0.5 transition">
+            <div class="flex flex-col items-center">
+              <div class="text-3xl">🧾</div>
+              <div class="mt-1 font-semibold text-gray-700">Lihat Histori</div>
+            </div>
+          </button>
+
+          <button onclick="navigateTo('page-analysis')"
+                  class="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transform hover:-translate-y-0.5 transition">
+            <div class="flex flex-col items-center">
+              <div class="text-3xl">📊</div>
+              <div class="mt-1 font-semibold text-gray-700">Lihat Analisis</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Recent History -->
+        <div>
+          <h3 class="font-bold text-lg text-gray-800 mb-3 px-1">Histori Terbaru</h3>
+          <div id="dash-history-list" class="space-y-3">
+            <p class="text-center text-gray-500 py-4">Belum ada transaksi.</p>
+          </div>
+        </div>
+      </main>
+
+      <!-- FAB -->
+      <div class="fixed bottom-6 right-6 z-40" style="right: calc(50% - 210px + 1rem);">
+        <button onclick="showModal('modal-add-tx')"
+                class="w-16 h-16 rounded-full shadow-xl flex items-center justify-center text-white text-2xl"
+                style="background: linear-gradient(180deg, #f59e0b, #f97316);">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- PAGE: HISTORY -->
+    <div id="page-history" class="page min-h-screen bg-white hidden">
+      <header class="sticky top-0 z-20 p-4 bg-white shadow-md flex items-center justify-between">
+        <button class="p-2 rounded-full hover:bg-gray-100" onclick="navigateTo('page-dashboard')">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h2 class="text-xl font-bold">Histori Transaksi</h2>
+        <div style="width:32px"></div>
+      </header>
+
+      <main class="p-4">
+        <div class="mb-4">
+          <select id="history-filter-time" onchange="renderHistoryPage()"
+                  class="w-full px-4 py-3 border rounded-lg bg-gray-100 focus:outline-none">
+            <option value="today">Hari ini</option>
+            <option value="week">Minggu ini</option>
+            <option value="month" selected>Bulan ini</option>
+            <option value="all">Semua</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="bg-green-50 p-4 rounded-lg">
+            <p class="text-sm text-green-800">Total Pemasukan</p>
+            <p id="hist-total-in" class="text-lg font-bold text-green-600">Rp 0</p>
+          </div>
+          <div class="bg-red-50 p-4 rounded-lg">
+            <p class="text-sm text-red-800">Total Pengeluaran</p>
+            <p id="hist-total-out" class="text-lg font-bold text-red-600">Rp 0</p>
+          </div>
+        </div>
+
+        <div id="history-full-list" class="space-y-3">
+          <p class="text-center text-gray-500 py-8">Tidak ada transaksi untuk periode ini.</p>
+        </div>
+      </main>
+    </div>
+
+    <!-- PAGE: ANALYSIS -->
+    <div id="page-analysis" class="page min-h-screen bg-white hidden">
+      <header class="sticky top-0 z-20 p-4 bg-white shadow-md flex items-center justify-between">
+        <button class="p-2 rounded-full hover:bg-gray-100" onclick="navigateTo('page-dashboard')">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h2 class="text-xl font-bold">Analisis Pengeluaran</h2>
+        <div style="width:32px"></div>
+      </header>
+
+      <main class="p-4">
+        <div class="mb-4">
+          <select id="analysis-filter-time" onchange="renderAnalysisPage()"
+                  class="w-full px-4 py-3 border rounded-lg bg-gray-100 focus:outline-none">
+            <option value="week">Mingguan</option>
+            <option value="month" selected>Bulanan</option>
+            <option value="year">Tahunan</option>
+          </select>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow mb-4">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Pengeluaran per Kategori</h3>
+          <div class="h-64 w-full">
+            <canvas id="analysis-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Ringkasan Budget</h3>
+          <div class="space-y-2">
+            <div class="flex justify-between"><span class="text-gray-600">Limit Pengeluaran:</span><span id="analysis-limit" class="font-bold">Rp 0</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">Total Terpakai:</span><span id="analysis-terpakai" class="font-bold text-danger">Rp 0</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">Sisa Budget:</span><span id="analysis-sisa" class="font-bold text-success">Rp 0</span></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- PAGE: SETTINGS -->
+    <div id="page-settings" class="page min-h-screen bg-white hidden">
+      <header class="sticky top-0 z-20 p-4 bg-white shadow-md flex items-center justify-between">
+        <button class="p-2 rounded-full hover:bg-gray-100" onclick="navigateTo('page-dashboard')">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h2 class="text-xl font-bold">Pengaturan</h2>
+        <div style="width:32px"></div>
+      </header>
+
+      <main class="divide-y divide-gray-200">
+        <a class="block p-4 hover:bg-gray-50" onclick="navigateTo('page-settings-limit')">
+          <div class="flex justify-between items-center"><span>Atur Limit Pengeluaran</span><svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
+        </a>
+        <a class="block p-4 hover:bg-gray-50" onclick="navigateTo('page-settings-kategori')">
+          <div class="flex justify-between items-center"><span>Edit Kategori Budget</span><svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
+        </a>
+        <a class="block p-4 hover:bg-gray-50" onclick="navigateTo('page-settings-motivasi')">
+          <div class="flex justify-between items-center"><span>Ubah Kata-kata Motivasi</span><svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
+        </a>
+        <a class="block p-4 hover:bg-red-50" onclick="navigateTo('page-settings-notifikasi')">
+          <div class="flex justify-between items-center"><span>Pengaturan Notifikasi Impian</span><svg class="h-5 w-5 text-gray-400" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
+        </a>
+        <a class="block p-4 hover:bg-red-50" onclick="showModal('modal-confirm-reset')">
+          <div class="flex justify-between items-center"><span class="text-danger font-medium">Reset Data Aplikasi</span><svg class="h-5 w-5 text-danger" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div>
+        </a>
+      </main>
+    </div>
+
+    <!-- Sub-settings pages (limit, kategori, motivasi, notif) - keep them hidden initially -->
+    <div id="page-settings-limit" class="page min-h-screen bg-white hidden">
+      <header class="sticky top-0 z-20 p-4 bg-white shadow-md flex items-center justify-between">
+        <button class="p-2 rounded-full hover:bg-gray-100" onclick="navigateTo('page-settings')"><svg class="h-6 w-6" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+        <h2 class="text-xl font-bold">Atur Limit</h2>
+        <div style="width:32px"></div>
+      </header>
+      <main class="p-4">
+        <label class="block text-sm mb-1">Limit Pengeluaran Bulanan</label>
+        <input id="setting-limit-bulanan" type="number" class="w-full px-4 py-3 border rounded-lg bg-gray-100" placeholder="Contoh: 2000000" />
+        <button onclick="saveSettingsLimit()" class="mt-4 py-3 w-full rounded-lg text-white font-semibold" style="background: linear-gradient(180deg,#059669,#047857)">Simpan</button>
+      </main>
+    </div>
+
+    <div id="page-settings-kategori" class="page min-h-screen bg-white hidden">
+      <header class="sticky top-0 z-20 p-4 bg-white shadow-md flex items-center justify-between">
+        <button class="p-2 rounded-full hover:bg-gray-100" onclick="navigateTo('page-settings')"><svg class="h-6 w-6" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+        <h2 class="text-xl font-bold">Edit Kategori</h2>
+        <div style="width:32px"></div>
+      </header>
+      <main class="p-4">
+        <div class="flex gap-2 mb-4">
+          <input id="setting-kategori-baru" type="text" class="flex-1 px-4 py-3 border rounded-lg bg-gray-100" placeholder="Nama Kategori Baru (misal: 🍔 Makanan)" />
+          <button onclick="addCategory()" class="py-3 px-4 rounded-lg text-white" style="background: linear-gradient(180deg,#059669,#047857)">Tambah</button>
+        </div>
+        <div id="settings-kategori-list" class="space-y-2"></div>
+      </main>
+    </div>
+
+    <div id="page-settings-motivasi" class="page min-h-screen bg-white hidden">
+      <header class="sticky top-0 z-20 p-4 bg-white shadow-md flex items-center justify-between">
+        <button class="p-2 rounded-full hover:bg-gray-100" onclick="navigateTo('page-settings')"><svg class="h-6 w-6" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+        <h2 class="text-xl font-bold">Kata Motivasi</h2>
+        <div style="width:32px"></div>
+      </header>
+      <main class="p-4 space-y-4">
+        <p class="text-sm text-gray-600">Kata-kata ini akan muncul di dashboard saat budget Anda menipis.</p>
+        <input id="setting-motivasi-kuning" type="text" class="w-full px-4 py-3 border rounded-lg bg-gray-100" placeholder="Saat budget Kuning" />
+        <input id="setting-motivasi-merah" type="text" class="w-full px-4 py-3 border rounded-lg bg-gray-100" placeholder="Saat budget Merah" />
+        <button onclick="saveSettingsMotivasi()" class="mt-2 py-3 w-full rounded-lg text-white" style="background: linear-gradient(180deg,#059669,#047857)">Simpan</button>
+      </main>
+    </div>
+
+    <div id="page-settings-notifikasi" class="page min-h-screen bg-white hidden">
+      <header class="sticky top-0 z-20 p-4 bg-white shadow-md flex items-center justify-between">
+        <button class="p-2 rounded-full hover:bg-gray-100" onclick="navigateTo('page-settings')"><svg class="h-6 w-6" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+        <h2 class="text-xl font-bold">Notifikasi Impian</h2>
+        <div style="width:32px"></div>
+      </header>
+      <main class="p-4">
+        <div class="flex justify-between items-center p-3 bg-gray-100 rounded-lg mb-3">
+          <span>Aktifkan notifikasi harian</span>
+          <input id="setting-notif-aktif" type="checkbox" class="form-checkbox h-5 w-5" />
+        </div>
+        <label class="block text-sm mb-1">Waktu Notifikasi</label>
+        <input id="setting-notif-waktu" type="time" class="w-full px-4 py-3 border rounded-lg bg-gray-100" />
+        <button onclick="saveSettingsNotifikasi()" class="mt-4 py-3 w-full rounded-lg text-white" style="background: linear-gradient(180deg,#059669,#047857)">Simpan</button>
+      </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- ADD TX modal -->
+    <div id="modal-add-tx" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="p-5">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Catat Transaksi</h3>
+            <button onclick="hideModal('modal-add-tx')" class="p-2 rounded-full hover:bg-gray-100">
+              <svg class="h-6 w-6" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="mb-4">
+            <div class="flex border-b">
+              <button id="tab-pengeluaran" onclick="switchTxType('pengeluaran')" class="flex-1 py-2 text-center font-semibold border-b-2 border-primary text-primary">Pengeluaran</button>
+              <button id="tab-pemasukan" onclick="switchTxType('pemasukan')" class="flex-1 py-2 text-center font-semibold text-gray-500">Pemasukan</button>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <input id="form-tx-nominal" type="number" placeholder="Rp 0" class="w-full px-4 py-3 border rounded-lg bg-gray-100 text-2xl" />
+            <div id="form-tx-kategori-group">
+              <select id="form-tx-kategori" class="w-full px-4 py-3 border rounded-lg bg-gray-100"></select>
+            </div>
+            <input id="form-tx-alasan" type="text" placeholder="Alasan / Catatan (opsional)" class="w-full px-4 py-3 border rounded-lg bg-gray-100" />
+            <input id="form-tx-tanggal" type="date" class="w-full px-4 py-3 border rounded-lg bg-gray-100" />
+            <button onclick="saveTransaction()" class="py-3 w-full rounded-lg text-white font-semibold" style="background: linear-gradient(180deg,#059669,#047857)">Simpan Transaksi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT DREAM modal -->
+    <div id="modal-edit-dream" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="p-5">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Ubah Impian</h3>
+            <button onclick="hideModal('modal-edit-dream')" class="p-2 rounded-full hover:bg-gray-100">
+              <svg class="h-6 w-6" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <input id="form-dream-title" type="text" placeholder="Judul Impian" class="w-full px-4 py-3 border rounded-lg bg-gray-100" />
+            <input id="form-dream-target" type="number" placeholder="Target Nominal" class="w-full px-4 py-3 border rounded-lg bg-gray-100" />
+            <input id="form-dream-date" type="date" class="w-full px-4 py-3 border rounded-lg bg-gray-100" />
+            <button onclick="saveDream()" class="py-3 w-full rounded-lg text-white font-semibold" style="background: linear-gradient(180deg,#059669,#047857)">Simpan Impian</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Reset -->
+    <div id="modal-confirm-reset" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="p-5">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-danger">Konfirmasi Reset Data</h3>
+            <button onclick="hideModal('modal-confirm-reset')" class="p-2 rounded-full hover:bg-gray-100">
+              <svg class="h-6 w-6" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <p class="text-gray-700 mb-2">Semua data (saldo, impian, budget, dan histori transaksi) akan <strong class="text-danger">dihapus permanen</strong> dan aplikasi akan kembali ke keadaan awal.</p>
+          <div class="grid grid-cols-2 gap-4 mt-4">
+            <button onclick="hideModal('modal-confirm-reset')" class="py-3 rounded-lg bg-gray-200">Batal</button>
+            <button onclick="resetApp()" class="py-3 rounded-lg bg-danger text-white">Ya, Reset Sekarang</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-8 hidden px-5 py-3 rounded-lg text-white text-sm"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+              </html>
