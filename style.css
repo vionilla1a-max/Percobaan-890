@@ -1,0 +1,61 @@
+/* Global */
+body { font-family: 'Inter', sans-serif; -webkit-font-smoothing:antialiased; }
+
+/* Pages and modal basics */
+.page { display: none; }
+.page.active { display: block; }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+  z-index: 50;
+  padding: 1rem;
+}
+.modal-overlay.hidden { display: none; }
+.modal-content {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 20px 40px rgba(2,6,23,0.15);
+  animation: slideUp .28s ease-out;
+  overflow: hidden;
+}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+
+/* FAB tweak shadow */
+button[onclick*="showModal('modal-add-tx')"] { box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+/* Toast */
+#toast { min-width: 220px; opacity: 0; transition: all .24s ease; transform: translateY(10px); }
+#toast.show { opacity: 1; transform: translateY(0); }
+
+/* Cards */
+.bg-white { background-color: #ffffff; }
+
+/* Small util tweaks for progress */
+#dash-dream-progress { height: 10px; border-radius: 9999px; }
+
+/* Hide elements using classes */
+.hidden { display: none !important; }
+
+/* Make sure selects/inputs have consistent look on mobile */
+select, input[type="date"], input[type="time"], input[type="text"], input[type="number"] {
+  -webkit-appearance: none; appearance: none;
+}
+
+/* For card rounding and shadow */
+.rounded-xl { border-radius: 1rem; }
+.shadow-md { box-shadow: 0 6px 18px rgba(2,6,23,0.06); }
+.shadow-sm { box-shadow: 0 4px 12px rgba(2,6,23,0.04); }
+.shadow-xl { box-shadow: 0 20px 40px rgba(2,6,23,0.12); }
+
+/* Make header rounded bottom more pronounced on small screens */
+@media (max-width: 480px) {
+  header { border-bottom-left-radius: 2rem; border-bottom-right-radius: 2rem; }
+  }
