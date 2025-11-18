@@ -349,6 +349,59 @@ function saveDream() {
 }
 
 
+
+function saveDream() {
+  try {
+    console.log('[saveDream] called');
+    const titleEl = document.getElementById('form-dream-title');
+    const targetEl = document.getElementById('form-dream-target');
+    const dateEl = document.getElementById('form-dream-date');
+
+    if (!titleEl || !targetEl || !dateEl) {
+      console.error('[saveDream] One or more form elements are missing', {titleEl, targetEl, dateEl});
+      return showToast('Form impian tidak ditemukan di halaman.', 'error');
+    }
+
+    const title = titleEl.value.trim();
+    // Remove non-digit characters (commas/dots) before parse
+    const rawTarget = targetEl.value.toString().replace(/[^0-9.-]/g, '');
+    const target = parseFloat(rawTarget) || 0;
+    const date = dateEl.value || getISODate();
+
+    console.log('[saveDream] values', {title, rawTarget, target, date});
+
+    if (!title) {
+      console.warn('[saveDream] Title empty');
+      return showToast('Judul impian tidak boleh kosong!', 'error');
+    }
+    if (target <= 0) {
+      console.warn('[saveDream] Target not > 0', target);
+      return showToast('Target nominal harus lebih besar dari 0!', 'error');
+    }
+
+    if (typeof db === 'undefined') {
+      console.error('[saveDream] db is undefined');
+      return showToast('Database tidak tersedia. Muat ulang halaman.', 'error');
+    }
+
+    db.dream = db.dream || {};
+    db.dream.title = title;
+    db.dream.targetAmount = target;
+    db.dream.targetDate = date;
+
+    saveDB();
+    console.log('[saveDream] saved to DB', db.dream);
+
+    hideModal('modal-edit-dream');
+    showToast('Impian berhasil disimpan!', 'success');
+    renderDashboard();
+  } catch (err) {
+    console.error('[saveDream] exception', err);
+    showToast('Terjadi kesalahan saat menyimpan impian.', 'error');
+  }
+}
+
+
 // Toast
 let toastTimer = null;
 function showToast(message, type='default') {
