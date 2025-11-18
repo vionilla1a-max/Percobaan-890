@@ -329,6 +329,26 @@ function populateCategorySelects() {
   });
 }
 
+
+function saveDream() {
+  const title = document.getElementById('form-dream-title').value.trim();
+  const target = parseFloat(document.getElementById('form-dream-target').value) || 0;
+  const date = document.getElementById('form-dream-date').value || getISODate();
+
+  if (!title) return showToast('Judul impian tidak boleh kosong!', 'error');
+  if (target <= 0) return showToast('Target nominal harus lebih besar dari 0!', 'error');
+
+  db.dream.title = title;
+  db.dream.targetAmount = target;
+  db.dream.targetDate = date;
+
+  saveDB();
+  hideModal('modal-edit-dream');
+  showToast('Impian berhasil disimpan!', 'success');
+  renderDashboard();
+}
+
+
 // Toast
 let toastTimer = null;
 function showToast(message, type='default') {
