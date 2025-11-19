@@ -1,40 +1,45 @@
 ✨ Fitur Utama
 🏠 Dashboard Utama
-Menampilkan saldo keuangan saat ini
-Daftar impian aktif
-Riwayat transaksi terbaru
-Navigasi cepat ke fitur utama
+Dashboard dirancang untuk menampilkan informasi penting secara ringkas, meliputi:
+Saldo keuangan terbaru
+Daftar impian yang sedang dikejar
+Riwayat transaksi terakhir
+Akses cepat menuju fitur-fitur inti aplikasi
 
 📝 Pencatatan Transaksi
-Tambahkan pemasukan atau pengeluaran
-Set nominal, kategori, target, dan tanggal
-Akses cepat melalui Floating Action Button (FAB)
-Notifikasi toast ketika transaksi berhasil disimpan
+Fitur ini memungkinkan pengguna mencatat setiap pemasukan maupun pengeluaran secara terstruktur. Pengguna dapat mengatur:
+Nominal, kategori, dan tanggal transaksi
+Target tertentu bila diperlukan
+Selain itu, tersedia untuk menambah transaksi dengan cepat serta notifikasi sebagai konfirmasi penyimpanan.
 
 💰 Pengaturan Budget Bulanan
-Atur limit anggaran per bulan
-Filter data berdasarkan rentang waktu
-Pantau sisa budget dengan tampilan visual
+Pengguna dapat mengatur batas anggaran bulanan agar pengeluaran lebih terkendali. Aplikasi menyediakan:
+Penetapan limit per bulan
+Filter data berdasarkan periode tertentu
+Visualisasi sederhana untuk memantau sisa anggaran
 
 📈 Analisis Pengeluaran
-Ringkasan dan statistik pengeluaran
-Analisis berdasarkan kategori
-Memudahkan identifikasi pola keuangan
+Fitur analisis membantu pengguna memahami pola keuangan melalui:
+Ringkasan statistik pengeluaran
+Klasifikasi berdasarkan kategori transaksi
+Informasi pendukung untuk evaluasi kebiasaan finansial
 
 🧩 Pengaturan Lengkap
-Edit kategori transaksi
-Atur limit bulanan
-Tambah atau ubah kata motivasi
-Notifikasi impian untuk pengingat progress
-Reset seluruh data aplikasi
+Menu pengaturan mencakup beberapa opsi penyesuaian, seperti:
+Mengelola kategori transaksi
+Mengatur ulang limit bulanan
+Mengubah kata motivasi
+Mengaktifkan pengingat perkembangan impian
+Melakukan reset seluruh data aplikasi
 
 ☁️ Sinkronisasi Penyimpanan via GitHub
-Penyimpanan otomatis menggunakan GitHub
-Data dapat digunakan antar-perangkat
-Disarankan menggunakan repository private untuk keamanan
+Aplikasi menyediakan penyimpanan berbasis GitHub untuk mempermudah sinkronisasi. Dengan ini, pengguna dapat:
+Menyimpan data secara otomatis ke repository
+Mengakses data dari perangkat berbeda
+Menggunakan repository privat untuk menjaga kerahasiaan data
 
 🎨 Desain UI Modern
+Antarmuka aplikasi dibuat dengan gaya modern yang menekankan kenyamanan dan kejelasan visual, melalui:
 Tema warna emerald
-Card modern dan minimalis
-Bottom sheet untuk interaksi yang lebih bersih
-Fokus pada kenyamanan pengguna mobile
+Tampilan card yang bersih
+Aplikasi dioptimalkan untuk pengalaman terbaik pada perangkat mobile.
