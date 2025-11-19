@@ -1,16 +1,23 @@
 ✨ Fitur Utama
+
 🏠 Dashboard Terpadu
 Menampilkan saldo terbaru, impian yang sedang dijalankan, dan riwayat transaksi dalam satu tampilan.
+
 📝 Pencatatan Transaksi
 Mencatat pemasukan dan pengeluaran dengan pengaturan nominal, kategori, dan tanggal, disertai notifikasi penyimpanan.
+
 💰 Budget Bulanan
 Menetapkan batas anggaran setiap bulan dengan visualisasi sisa budget dan opsi filter periode.
+
 📈 Analisis Pengeluaran
 Menyajikan ringkasan statistik dan klasifikasi pengeluaran untuk membantu evaluasi finansial.
+
 🧩 Pengaturan Lengkap
 Mengelola kategori, limit bulanan, kata motivasi, pengingat impian, serta reset data.
+
 ☁️ Sinkronisasi via GitHub
 Penyimpanan otomatis ke repository GitHub yang mendukung akses lintas perangkat dan opsi repository privat.
+
 🎨 Desain UI Modern
 Menggunakan tema emerald dengan tampilan kartu yang bersih dan antarmuka yang optimal untuk perangkat mobile.
 
